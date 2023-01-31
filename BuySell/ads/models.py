@@ -8,34 +8,40 @@ User = get_user_model()
 class Ads(models.Model):
     title = models.CharField(max_length=255, verbose_name='Название')
     text = models.TextField(verbose_name='Текст')
-    time_created = models.DateTimeField(auto_now_add=True)
-    time_update = models.DateTimeField(auto_now=True)
-    is_published = models.BooleanField(default=True)
-    location = models.ForeignKey('Location', on_delete=models.CASCADE)
     price = MoneyField(
         max_digits=14,
         decimal_places=2,
         default_currency='USD',
-        null=True
-    )
-    seller = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="posts",
-        verbose_name='Автор'
-    )
-    category = models.ForeignKey(
-        'Category',
-        on_delete=models.CASCADE,
-        related_name="category",
-        verbose_name='Категория'
+        null=True,
+        verbose_name='Цена'
     )
     sell_rent = models.ForeignKey(
         'SellRent',
         on_delete=models.CASCADE,
-        related_name="posts",
+        related_name="ads",
         verbose_name='Группа'
     )
+    category = models.ForeignKey(
+        'Category',
+        on_delete=models.CASCADE,
+        related_name="ads",
+        verbose_name='Категория'
+    )
+    city = models.ForeignKey(
+        'City',
+        on_delete=models.CASCADE,
+        related_name="ads",
+        verbose_name='Город'
+    )
+    seller = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="ads",
+        verbose_name='Автор'
+    )
+    time_created = models.DateTimeField(auto_now_add=True)
+    time_update = models.DateTimeField(auto_now=True)
+    is_published = models.BooleanField(default=True)
 
 
     def __str__(self):
@@ -57,29 +63,32 @@ class Photo(models.Model):
     )
 
 
-class Location(models.Model):
-    country = models.ForeignKey(
-        'cities_light.Country',
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='country',
-        verbose_name='Страна'
-    )
-    city = models.ForeignKey(
-        'cities_light.City',
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='city',
-        verbose_name='Город'
-    )
-    city_slug = models.SlugField(unique=True, verbose_name='URL city')
+class Country(models.Model):
+    name = models.CharField(max_length=200, verbose_name='Страна')
 
     def __str__(self):
-        return f'Страна: {self.country}, Город: {self.city}, URL: {self.city_slug}'
+        return self.name
 
     class Meta:
-        verbose_name = 'Доступная локация'
-        verbose_name_plural = 'Доступные локации'
+        verbose_name = 'Локация - Страна'
+        verbose_name_plural = 'Локация - Страны'
+
+class City(models.Model):
+    name = models.CharField(max_length=200, verbose_name='Город')
+    city_slug = models.SlugField(unique=True, verbose_name='URL Category')
+    country = models.ForeignKey(
+        'Country',
+        on_delete=models.CASCADE,
+        related_name="ads",
+        verbose_name='Страна'
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Локация - Город'
+        verbose_name_plural = 'Локация - Города'
 
 
 class SellRent(models.Model):
@@ -88,9 +97,19 @@ class SellRent(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'Продажа/Аренда'
+        verbose_name_plural = 'Продажа/Аренда'
+
 class SuperCategory(models.Model):
     title = models.CharField(max_length=200, verbose_name='Суперкатегория')
 
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Каталог - суперкатегории'
+        verbose_name_plural = 'Каталог - суперкатегории'
 
 class Category(models.Model):
     title = models.CharField(max_length=200, verbose_name='Категория')
@@ -98,13 +117,16 @@ class Category(models.Model):
     supercategory = models.ForeignKey(
         'SuperCategory',
         on_delete=models.CASCADE,
-        related_name="supercategory",
+        related_name="ads",
         verbose_name='Суперкатегория'
     )
 
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'Каталог - категории'
+        verbose_name_plural = 'Каталог - категории'
 
 # class FollowAds(models.Model):
 #     user = models.ForeignKey(
