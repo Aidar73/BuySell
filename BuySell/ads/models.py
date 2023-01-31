@@ -128,45 +128,45 @@ class Category(models.Model):
         verbose_name = 'Каталог - категории'
         verbose_name_plural = 'Каталог - категории'
 
-# class FollowAds(models.Model):
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         related_name="user",
-#         verbose_name='Пользователь'
-#     )
-#     ads = models.ForeignKey(
-#         Ads,
-#         on_delete=models.CASCADE,
-#         related_name="ads",
-#         verbose_name='Объявления'
-#     )
-#     def __str__(self):
-#         return f'User:{self.user}, ads: {self.ads}'
-#
-#     class Meta:
-#         verbose_name = 'Избранное объявление'
-#         verbose_name_plural = 'Избранные объявления'
-#         unique_together = ['user', 'ads']
-#
-#
-# class FollowAuthors(models.Model):
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         related_name="user",
-#         verbose_name='Пользователь'
-#     )
-#     seller = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         related_name="seller",
-#         verbose_name='Продавец'
-#     )
-#     def __str__(self):
-#         return f'User:{self.user}, seller: {self.seller}'
-#
-#     class Meta:
-#         verbose_name = 'Избранный продавец'
-#         verbose_name_plural = 'Избранные продавцы'
-#         unique_together = ['user', 'seller']
+
+class FollowAds(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь'
+    )
+    follow_ads = models.ForeignKey(
+        Ads,
+        on_delete=models.CASCADE,
+        related_name="follow_ads",
+        verbose_name='Избранное объявление'
+    )
+
+    def __str__(self):
+        return f'User:{self.user}, ads: {self.follow_ads}'
+
+    class Meta:
+        verbose_name = 'Избранное - объявления'
+        verbose_name_plural = 'Избранное - объявления'
+        unique_together = ['user', 'follow_ads']
+
+
+class FollowSellers(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь'
+    )
+    follow_seller = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="follow_sellers",
+        verbose_name='Продавец'
+    )
+    def __str__(self):
+        return f'User:{self.user}, seller: {self.follow_seller}'
+
+    class Meta:
+        verbose_name = 'Избранное - продавцы'
+        verbose_name_plural = 'Избранное - продавцы'
+        unique_together = ['user', 'follow_seller']

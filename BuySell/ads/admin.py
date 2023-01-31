@@ -29,3 +29,5 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Country)
 admin.site.register(SellRent)
 admin.site.register(SuperCategory)
+admin.site.register(FollowAds)
+admin.site.register(FollowSellers)
