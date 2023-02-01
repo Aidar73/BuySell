@@ -15,7 +15,7 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ("name", "city_slug", 'country')
     search_fields = ("name",)
     list_filter = ("country",)
-    prepopulated_fields = {'city_slug': ('name',),}
+    prepopulated_fields = {'city_slug': ('name',), }
 
 
 @admin.register(Category)
@@ -23,7 +23,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("title", "cat_slug", 'supercategory')
     search_fields = ("title",)
     list_filter = ("supercategory",)
-    prepopulated_fields = {'cat_slug': ('title',),}
+    prepopulated_fields = {'cat_slug': ('title',), }
 
 
 admin.site.register(Country)

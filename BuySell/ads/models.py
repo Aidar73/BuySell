@@ -43,7 +43,6 @@ class Ads(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
 
-
     def __str__(self):
         return self.title
 
@@ -73,6 +72,7 @@ class Country(models.Model):
         verbose_name = 'Локация - Страна'
         verbose_name_plural = 'Локация - Страны'
 
+
 class City(models.Model):
     name = models.CharField(max_length=200, verbose_name='Город')
     city_slug = models.SlugField(unique=True, verbose_name='URL Category')
@@ -101,6 +101,7 @@ class SellRent(models.Model):
         verbose_name = 'Продажа/Аренда'
         verbose_name_plural = 'Продажа/Аренда'
 
+
 class SuperCategory(models.Model):
     title = models.CharField(max_length=200, verbose_name='Суперкатегория')
 
@@ -110,6 +111,7 @@ class SuperCategory(models.Model):
     class Meta:
         verbose_name = 'Каталог - суперкатегории'
         verbose_name_plural = 'Каталог - суперкатегории'
+
 
 class Category(models.Model):
     title = models.CharField(max_length=200, verbose_name='Категория')
@@ -163,6 +165,7 @@ class FollowSellers(models.Model):
         related_name="follow_sellers",
         verbose_name='Продавец'
     )
+
     def __str__(self):
         return f'User:{self.user}, seller: {self.follow_seller}'
 

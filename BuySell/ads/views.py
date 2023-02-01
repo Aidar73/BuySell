@@ -1,11 +1,21 @@
-from django.http import HttpResponse
+from django.core.paginator import Paginator
 from django.shortcuts import render
 
-# Create your views here.
+from ads.models import *
+
+
 def index(request):
-    return HttpResponse('BuySell')
+    ads_list = Ads.objects.order_by('-time_created').all()
+    paginator = Paginator(ads_list, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'index.html', {
+        'title': 'BuySell: недвижимость, транспорт, вещи',
+        'page': page,
+        'paginator': paginator
+    })
 
-
+# views for image
 # def add_location(request):
 #     if request.method == 'GET':
 #         form = LocationForm()
