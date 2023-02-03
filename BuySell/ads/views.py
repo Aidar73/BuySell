@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from ads.models import *
 
@@ -14,6 +14,14 @@ def index(request):
         'page': page,
         'paginator': paginator
     })
+
+
+def ads_view(request, city_slug, cat_slug, ads_id):
+    ads = get_object_or_404(Ads, pk=ads_id)
+    return render(request, 'ads_view.html', {
+            'ads': ads,
+    })
+
 
 # views for image
 # def add_location(request):

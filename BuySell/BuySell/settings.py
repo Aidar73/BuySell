@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'ads.apps.AdsConfig',
     'cities_light',
     'djmoney',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [

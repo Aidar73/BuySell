@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.template.defaultfilters import slugify
 from djmoney.models.fields import MoneyField
 
 User = get_user_model()
@@ -50,16 +51,15 @@ class Ads(models.Model):
         verbose_name = 'Объявление'
         verbose_name_plural = 'Объявления'
 
+def get_image_filename(instance, filename):
+    title = instance.ads.title
+    slug = slugify(title)
+    return "ads_images/%s-%s" % (slug, filename)
+
 
 class Photo(models.Model):
-    image = models.ImageField(upload_to='photos/%Y/%m/%d')
-    ads = models.ForeignKey(
-        Ads,
-        null=True,
-        related_name='photos',
-        on_delete=models.SET_NULL,
-        verbose_name='Фото'
-    )
+    ads = models.ForeignKey(Ads, default=None, null=True, on_delete=models.SET_NULL, related_name='images')
+    image = models.ImageField(upload_to=get_image_filename, verbose_name='Фото')
 
 
 class Country(models.Model):

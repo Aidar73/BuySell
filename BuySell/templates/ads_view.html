@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %} {{ ads.title }} | {{ads.sell_rent}} | {{ads.city}} | {{ads.category}} {% endblock %}
+{% block content %}
 
-</body>
-</html>
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-12">
+                <small class="text-muted">
+                    <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}">{{ ads.city.country }}</a> ·
+                    <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}">{{ ads.city }}</a> ·
+                    <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}">{{ ads.category.supercategory }}</a> ·
+                    <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}">{{ ads.category }}</a>
+                </small>
+        </div>
+        <div class="col-12 col-md-8">
+                <h3>{{ ads.title }}</h3>
+                <!-- Отображение картинки -->
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    {% if not ads.images.count %}
+                    <img class="d-block w-100" src="/media/noimage.png">
+                    {% else %}
+                        <div class="carousel-inner">
+                            {% for image in post.images %}
+                                <div class="carousel-item active">
+                                  {% load thumbnail %}
+                                    {% thumbnail image "640x480" crop="center" upscale=True as im %}
+                                    <img class="d-block w-100" src="{{ im.url }}" >
+                                  {% endthumbnail %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Предыдущее</span>
+                      </a>
+                      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Следующее</span>
+                      </a>
+                    {% endif %}
+                </div>
+                <!-- Отображение текста -->
+                <p class="card-text">
+                    <h4>Описание</h4>
+                    {{ ads.text|linebreaksbr }}
+                </p>
+                <!-- Дата публикации -->
+                <small class="text-muted">№{{ ads.id}} · {{ ads.time_created|date:"d M Y г. G:i" }}</small>
+        </div>
+        <div class="col-6 col-md-3">
+            <h3>{{ ads.price }}</h3>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

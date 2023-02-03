@@ -3,10 +3,13 @@
 {% block content %}
 
     <div class="container">
-        <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+        <div style="display: flex; flex-direction: column; flex-wrap: wrap">
 
-            {% for ads in page %}
-            <div class="card" style="width: 16rem; margin: 8px">
+          {% for ads in page %}
+
+            <div class="card mb-3; col-md-10" style="margin: 8px;">
+              <div class="row g-0">
+                <div class="col-md-4">
                 {% if not ads.images.count %}
                     <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img src="media/noimage.png" class="card-img-top" ></a>
                 {% else %}
@@ -15,15 +18,19 @@
                     <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img class="card-img-top" src="{{ im.url }}" ></a>
                 {% endthumbnail %}
                 {% endif %}
-              <div class="card-body">
-              <div style="display: flex; flex-direction: row">
-                  <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><strong>{{ ads.title }}</strong></a>
+                </div>
+                <div class="col-md-5">
+                  <div class="card-body">
+                    <a class="card-title" href="{% url 'index' %}"><h5>{{ ads.title }}</h5></a>
+                    <p class="card-text"><strong>{{ ads.price }}</strong></p>
+                    <small class="text-muted">{{ ads.city }}</small><br>
+                    <small class="text-muted">{{ ads.text }}</small><br>
+                    <small class="text-muted">{{ ads.time_created|date:"d M Y г. G:i" }}</small>
+                  </div>
+                </div>
               </div>
-                  <p class="card-text"><strong>{{ ads.price }}</strong></p>
-                  <small class="text-muted">{{ ads.city }}</small><br>
-                  <small class="text-muted">{{ ads.time_created|date:"d M Y г. G:i" }}</small>
             </div>
-          </div>
+
           {% endfor %}
 
         </div>
