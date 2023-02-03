@@ -22,6 +22,8 @@ from ads.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("auth/", include("users.urls")),
+    path("auth/", include("django.contrib.auth.urls")),
     path('', include('ads.urls'))
 ]
 
