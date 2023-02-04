@@ -12,7 +12,7 @@ class Ads(models.Model):
     price = MoneyField(
         max_digits=14,
         decimal_places=2,
-        default_currency='USD',
+        default_currency='RUB',
         null=True,
         verbose_name='Цена'
     )
@@ -20,7 +20,7 @@ class Ads(models.Model):
         'SellRent',
         on_delete=models.CASCADE,
         related_name="ads",
-        verbose_name='Группа'
+        verbose_name='Вид объявления'
     )
     category = models.ForeignKey(
         'Category',
@@ -51,14 +51,14 @@ class Ads(models.Model):
         verbose_name = 'Объявление'
         verbose_name_plural = 'Объявления'
 
+
 def get_image_filename(instance, filename):
-    title = instance.ads.title
-    slug = slugify(title)
-    return "ads_images/%s-%s" % (slug, filename)
+    ads_id = instance.ads.pk
+    return f"media/images/{ads_id}/{filename}"
 
 
 class Photo(models.Model):
-    ads = models.ForeignKey(Ads, default=None, null=True, on_delete=models.SET_NULL, related_name='images')
+    ads = models.ForeignKey(Ads, default=None, null=True, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=get_image_filename, verbose_name='Фото')
 
 

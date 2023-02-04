@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %} {{ author.get_full_name }} {% endblock %}
+{% block content %}
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-3 mb-3 mt-1">
+            <div class="card">
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">
+                          <h2>{{ seller.first_name }}</h2>
+                        Объявлений: {{ seller.ads.count }}
+                      </li>
+                      {% if request.user == seller %}
+                        <li class="list-group-item">
+                            Логин: {{ user.username }}<br>
+                            Имя: {{ user.first_name }}<br>
+                            Фамилия: {{ user.last_name }}<br>
+                            e-mail: {{ user.email }}<br>
+                            Телефон: {{ user.email }}
+                        </li>
+                        <li class="list-group-item">
+                            <a class="text-dark" href="{% url 'password_change' %}">Изменить мои данные</a><br>
+                            <a class="text-dark" href="{% url 'password_change' %}">Изменить пароль</a><br>
+                            <a class="text-dark" href="{% url 'logout' %}">Выйти</a>
+                        </li>
+                      {% endif %}
+                    </ul>
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% for ads in page %}
+                {% include "ads_search.html" with ads=ads %}
+            {% endfor %}
+            {% if page.has_other_pages %}
+                {% include "paginator.html" with items=page paginator=paginator %}
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}

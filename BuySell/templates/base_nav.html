@@ -2,13 +2,11 @@
     <a class="navbar-brand" href="/"><span style="color:red">B</span>uy<span style="color:red">S</span>ell</a>
     <nav class="my-2 my-md-0 mr-md-3">
         {% if user.is_authenticated %}
-            <a class="p-2 text-dark" href="{% url 'index' %}">Новая запись</a>
-            Пользователь: <a class="p-2 text-dark" href="{% url 'index' %}">{{ user.username }}.</a>
-            <a class="p-2 text-dark" href="{% url 'password_change' %}">Изменить пароль</a>
-            <a class="p-2 text-dark" href="{% url 'logout' %}">Выйти</a>
+            <a class="p-2 text-dark" href="{% url 'profile' user.username %}">{{ user.first_name }}</a>
         {% else %}
             <a class="p-2 text-dark" href="{% url 'login' %}">Войти</a> |
             <a class="p-2 text-dark" href="{% url 'signup' %}">Регистрация</a>
         {% endif %}
+        <a class="btn btn-primary" href="{% url 'ads_new' %}" role="button">Разместить объявление</a>
     </nav>
 </nav>

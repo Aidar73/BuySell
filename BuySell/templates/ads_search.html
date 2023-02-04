@@ -1,0 +1,25 @@
+<div class="container overflow-hidden">
+    <div class="card mb-3" style="margin: 4px;">
+      <div class="row g-0">
+        <div class="col-md-4">
+            {% if not ads.images.count %}
+            <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img class="img-fluid rounded-start" src="/media/noimage.png" ></a>
+            {% else %}
+              {% load thumbnail %}
+              {% thumbnail ads.images.first.image "240x180" crop="center" upscale=True as im %}
+              <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img class="img-fluid rounded-start" src="{{ im.url }}" ></a>
+              {% endthumbnail %}
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="card-text p-2">
+            <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><h5>{{ ads.title }}</h5></a>
+            <strong>{{ ads.price }}</strong><br>
+            <small class="text-muted">{{ ads.city }}</small><br>
+            <small class="text-muted d-inline-block text-truncate" style="max-width: 450px;">{{ ads.text }}</small><br>
+            <small class="text-muted">{{ ads.time_created|date:"d M Y г. G:i" }}</small>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

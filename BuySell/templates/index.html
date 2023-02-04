@@ -6,23 +6,21 @@
         <div style="display: flex; flex-direction: row; flex-wrap: wrap">
 
             {% for ads in page %}
-            <div class="card" style="width: 16rem; margin: 8px">
+            <div class="card" style="width: 16rem; margin: 6px">
                 {% if not ads.images.count %}
-                    <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img src="media/noimage.png" class="card-img-top" ></a>
+                <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img src="/media/noimage.png" class="card-img-top" ></a>
                 {% else %}
-                {% load thumbnail %}
-                    {% thumbnail ads.images "268x200" crop="center" upscale=True as im %}
+                    {% load thumbnail %}
+                    {% thumbnail ads.images.first.image "268x200" crop="center" upscale=True as im %}
                     <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img class="card-img-top" src="{{ im.url }}" ></a>
-                {% endthumbnail %}
+                    {% endthumbnail %}
                 {% endif %}
-              <div class="card-body">
-              <div style="display: flex; flex-direction: row">
+                <div class="card-text p-3">
                   <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><strong>{{ ads.title }}</strong></a>
-              </div>
-                  <p class="card-text"><strong>{{ ads.price }}</strong></p>
+                  <p class="card-text"><strong>{{ ads.price }}</strong><br>
                   <small class="text-muted">{{ ads.city }}</small><br>
-                  <small class="text-muted">{{ ads.time_created|date:"d M Y г. G:i" }}</small>
-            </div>
+                  <small class="text-muted">{{ ads.time_created|date:"d M Y г. G:i" }}</small></p>
+                </div>
           </div>
           {% endfor %}
 

@@ -122,6 +122,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -133,7 +135,7 @@ MEDIA_URL = '/media/'
 
 CURRENCIES=('RUB', 'USD', 'GEL')
 
-CURRENCY_CHOICES = [('RUB', 'Rub'), ('USD', 'Dollars'), ('GEL', 'Lari')]
+CURRENCY_CHOICES = [('RUB', 'Рублей'), ('USD', 'Долларов'), ('GEL', 'Лари')]
 
 LOGIN_URL = "/auth/login/"
 
