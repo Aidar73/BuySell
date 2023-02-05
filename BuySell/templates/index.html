@@ -2,34 +2,35 @@
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 
-    <div class="container">
-        <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-11 mx-auto">
+            <div style="display: flex; flex-direction: row; flex-wrap: wrap">
 
-            {% for ads in page %}
-            <div class="card" style="width: 16rem; margin: 6px">
-                {% if not ads.images.count %}
-                <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img src="/media/noimage.png" class="card-img-top" ></a>
-                {% else %}
-                    {% load thumbnail %}
-                    {% thumbnail ads.images.first.image "268x200" crop="center" upscale=True as im %}
-                    <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img class="card-img-top" src="{{ im.url }}" ></a>
-                    {% endthumbnail %}
-                {% endif %}
-                <div class="card-text p-3">
-                  <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><strong>{{ ads.title }}</strong></a>
-                  <p class="card-text"><strong>{{ ads.price }}</strong><br>
-                  <small class="text-muted">{{ ads.city }}</small><br>
-                  <small class="text-muted">{{ ads.time_created|date:"d M Y г. G:i" }}</small></p>
-                </div>
-          </div>
-          {% endfor %}
-
+                {% for ads in page %}
+                <div class="card" style="width: 16rem; margin: 6px">
+                    {% if not ads.images.count %}
+                    <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img src="/media/noimage.png" class="card-img-top" ></a>
+                    {% else %}
+                        {% load thumbnail %}
+                        {% thumbnail ads.images.first.image "268x200" crop="center" upscale=True as im %}
+                        <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><img class="card-img-top" src="{{ im.url }}" ></a>
+                        {% endthumbnail %}
+                    {% endif %}
+                    <div class="card-text p-3">
+                      <a class="card-title" href="{% url 'ads_view' ads.city.city_slug ads.category.cat_slug ads.id %}"><strong>{{ ads.title }}</strong></a>
+                      <p class="card-text"><strong>{{ ads.price }}</strong><br>
+                      <small class="text-muted">{{ ads.city }}</small><br>
+                      <small class="text-muted">{{ ads.time_created|date:"d M Y г. G:i" }}</small></p>
+                    </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% if page.has_other_pages %}
+                {% include "paginator.html" with items=page paginator=paginator%}
+            {% endif %}
         </div>
-
-        {% if page.has_other_pages %}
-            {% include "paginator.html" with items=page paginator=paginator%}
-        {% endif %}
-
     </div>
+</div>
 
 {% endblock %}

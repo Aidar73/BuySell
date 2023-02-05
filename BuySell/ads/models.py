@@ -119,7 +119,7 @@ class Category(models.Model):
     supercategory = models.ForeignKey(
         'SuperCategory',
         on_delete=models.CASCADE,
-        related_name="ads",
+        related_name="category",
         verbose_name='Суперкатегория'
     )
 

@@ -2,6 +2,10 @@
 {% block title %} {{ ads.title }} | {{ads.sell_rent}} | {{ads.city}} | {{ads.category}} {% endblock %}
 {% block content %}
 
+{% if not ads.is_published %}
+<a class="btn btn-danger" href="{% url 'ads_edit' ads.city.city_slug ads.category.cat_slug ads.id %}" role="button">Объявление не активно, отредактируйте его</a>
+{% endif %}
+
 <main role="main" class="container">
     <div class="row">
         <div class="col-12">

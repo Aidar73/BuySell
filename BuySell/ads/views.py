@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 
 from ads.forms import AdsForm, AdsPhotoForm
@@ -7,7 +8,7 @@ from ads.models import *
 
 
 def index(request):
-    ads_list = Ads.objects.order_by('-time_created').all()
+    ads_list = Ads.objects.filter(is_published=True).order_by('-time_created')
     paginator = Paginator(ads_list, 20)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -20,6 +21,8 @@ def index(request):
 
 def ads_view(request, city_slug, cat_slug, ads_id):
     ads = get_object_or_404(Ads, pk=ads_id)
+    if not ads.is_published and request.user != ads.seller:
+        return redirect('ads_deactivated')
     return render(request, 'ads_view.html', {
             'ads': ads,
     })
@@ -71,7 +74,10 @@ def ads_delete(request, city_slug, cat_slug, ads_id):
 
 def profile(request, username):
     seller = get_object_or_404(User, username=username)
-    ads_list = Ads.objects.filter(seller=seller.pk)
+    if request.user == seller:
+        ads_list = Ads.objects.filter(seller=seller.pk).order_by('-time_created')
+    else:
+        ads_list = Ads.objects.filter(is_published=True).filter(seller=seller.pk).order_by('-time_created')
     paginator = Paginator(ads_list, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -81,6 +87,40 @@ def profile(request, username):
         'seller': seller,
     })
 
+
+def ads_deactivated(request):
+    return render(request, "ads_deactivated.html")
+
+
+def page_not_found(request, exception):
+    return render(request, "misc/ads_deactivated.html", {"path": request.path}, status=404)
+
+
+def server_error(request):
+    return render(request, "misc/500.html", status=500)
+
+
+def search(request):
+    if request.method == "GET":
+        query = request.GET.get('search')
+    ads_list = Ads.objects.filter(Q(title__iregex=query) |
+                                  Q(text__iregex=query) |
+                                  Q(category__title__iregex=query) |
+                                  Q(category__supercategory__title__iregex=query)
+                                  ).order_by('-time_created')
+    paginator = Paginator(ads_list, 20)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'search.html', {
+        'query': query,
+        'page': page,
+        'paginator': paginator
+    })
+
+
+def catalog(request):
+    category_list = SuperCategory.objects.all()
+    return render(request, 'catalog.html', {'category_list': category_list})
 
 # views for image
 # def add_location(request):

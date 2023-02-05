@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Все категории{% endblock %}
+{% block content %}
+
+<h2>Все категории</h2>
+<ul class="list-unstyled">
+    {% for c in category_list %}
+        <li><a class="dropdown-item" href="#">{{ c.title }}</a></li>
+            {% for subcategory in c.category.all %}
+                <ol><a class="dropdown-item" href="#">{{ subcategory.title }}</a></ol>
+            {% endfor %}
+    {% endfor %}
+</ul>
+
+
+
+
+
+{% endblock %}
