@@ -2,8 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
-
-from ads.forms import AdsForm, AdsPhotoForm
+from ads.forms import AdsForm, AdsPhotoForm, SearchForm
 from ads.models import *
 
 
@@ -100,42 +99,32 @@ def server_error(request):
     return render(request, "misc/500.html", status=500)
 
 
-def search(request):
-    if request.method == "GET":
-        query = request.GET.get('search')
-    ads_list = Ads.objects.filter(Q(title__iregex=query) |
-                                  Q(text__iregex=query) |
-                                  Q(category__title__iregex=query) |
-                                  Q(category__supercategory__title__iregex=query)
-                                  ).order_by('-time_created')
-    paginator = Paginator(ads_list, 20)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    return render(request, 'search.html', {
-        'query': query,
-        'page': page,
-        'paginator': paginator
-    })
-
-
 def catalog(request):
     category_list = SuperCategory.objects.all()
     return render(request, 'catalog.html', {'category_list': category_list})
 
-# views for image
-# def add_location(request):
-#     if request.method == 'GET':
-#         form = LocationForm()
-#         return render(request, 'add_location.html', {'form': form})
-#     elif request.method == 'POST':
-#         form = LocationForm(request.POST, requst.FILES)
-#         if form.is_valid():
-#             location = Location.objects.create(user=request.user, name=form.cleaned_data['name'])
-#             for f in request.FILES.getlist('photos'):
-#                 data = f.read() #Если файл целиком умещается в памяти
-#                 photo = Photo(location=location)
-#                 photo.image.save(f.name, ContentFile(data))
-#                 photo.save()
-#                 return redirect(location) #Надо определить get_absolute_url() в модели
-#         else:
-#             return render(request, 'add_location.html', {'form': form})
+
+def search(request):
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        query = form.cleaned_data['query']
+        city = form.cleaned_data['city']
+        if city:
+            ads_list = Ads.objects.filter(city=city)
+        else:
+            ads_list = Ads.objects.filter(
+                Q(title__iregex=query) |
+                Q(text__iregex=query) |
+                Q(category__title__iregex=query) |
+                Q(category__supercategory__title__iregex=query)
+            ).order_by('-time_created')
+    else:
+        ads_list = Ads.objects.all().order_by('-time_created')
+    paginator = Paginator(ads_list, 20)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'search.html', {
+        'form': form,
+        'page': page,
+        'paginator': paginator
+    })

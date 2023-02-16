@@ -15,10 +15,13 @@
                 <nav class="navbar navbar-light bg-light">
                   <div class="container-fluid">
                     <a class="btn btn-primary" href="{% url 'catalog' %}" role="button">Все категории</a>
-                    <form action="{% url 'search' %}" class="d-flex" method="get">
-                      <input name="search" class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
-                      <button class="btn btn-outline-primary" type="submit">Поиск</button>
-                    </form>
+                        <form action="{% url 'search' %}" class="d-flex" method="GET">
+                            <div class="form-group">
+                                {{ form.query }}
+                                {{ form.city }}
+                                <button class="btn btn-outline-primary" type="submit">Поиск</button>
+                            </div>
+                        </form>
                   </div>
                 </nav>
                 {% block content %}
